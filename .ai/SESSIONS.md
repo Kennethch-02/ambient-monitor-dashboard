@@ -67,6 +67,22 @@
   runs JS so it indexes, but SSG/prerender of the landing would be the gold standard (follow-up).
 - Pushed: dashboard 430d5ee, firmware ea34e24.
 
+## 2026-06-29 — Battery measurement + static SSG
+- **Firmware battery** (`ambient_monitor_scripts`): read battery on **GPIO35** (configurable pin/divider/
+  range via #defines), averaged + calibrated `analogReadMilliVolts`, 0–100%; publish `bateria_v`/`bateria_pct`
+  in `/ambient_data`; serial print at boot + each cycle. **Flashed via COM7 + monitored**: WiFi/NTP OK,
+  but GPIO35 reads **0.28 V (floating)** → battery+ must be wired through a 2:1 divider to GPIO35 (or tell
+  me the module's sense pin). Firmware commits: a89533e (battery), bbc2460 (ignore .vscode).
+- **Front battery**: mapped `bateria_pct`/`bateria_v` in EnvironmentContext (`current.battery`/`batteryVoltage`);
+  new `BatteryIndicator` chip in the dashboard header — hidden when batteryVoltage ≤ 2.5 V (no real battery).
+- **Static SSG** (best-practice SEO): `vite build` → `vite build --ssr src/entry-server.jsx` → `node prerender.js`
+  writes static HTML for `/`, `/dashboard`, `/embed` (root populated, ~38KB landing); client `hydrateRoot`.
+  Made `firebase.js` + `getTheme()` SSR-safe; `vite.config` conditional input (isSsrBuild). Per-route titles.
+- ⚠️ Process note: a commit was misdirected to the firmware repo (forgot `cd`); fixed via reset + force-with-lease.
+- Pushed: dashboard aee3d7a, firmware bbc2460.
+- USER TODO: wire battery divider→GPIO35 (or give pin); fill VITE_FIREBASE_AUTH_PASSWORD; export og.png (1200×630);
+  confirm ambient.teonix.dev domain.
+
 ## 2026-06-29 — Re-init dashboard repo + run
 - User had deleted the dashboard git + node_modules to restart. Moved Firebase config to `.env`
   (VITE_*), removed anon auth from `firebase.js` (exports only `db`), added `.env.example`, deleted
