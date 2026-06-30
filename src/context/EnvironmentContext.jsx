@@ -27,6 +27,8 @@ export const EnvironmentProvider = ({ children }) => {
       temperature: 0,
       humidity: 0,
       light: 0,
+      battery: 0,
+      batteryVoltage: 0,
       hasRecentMotion: false,
       motionDetected: false,
       timestamp: new Date()
@@ -86,6 +88,8 @@ export const EnvironmentProvider = ({ children }) => {
           temperature: value.temperatura,
           humidity: value.humedad,
           light: value.luz,
+          battery: value.bateria_pct,
+          batteryVoltage: value.bateria_v,
         }))
         .filter(entry => !isNaN(entry.timestamp.getTime()))
         .sort((a, b) => a.timestamp - b.timestamp);

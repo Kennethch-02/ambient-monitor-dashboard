@@ -18,28 +18,30 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
+let app;
+let auth;
+let db;
 
-// The dashboard authenticates with a dedicated read-only account (email/password) so the
-// Realtime Database rules can require `auth != null` for reads. Credentials come from
-// .env (VITE_FIREBASE_AUTH_EMAIL / _PASSWORD). NOTE: like the rest of the web config these
-// end up in the client bundle — keep this account read-only; real protection is the rules.
-const signIn = async () => {
+// Initialize Firebase only in the browser. During SSR / static prerender (Node) the web
+// SDK's browser APIs aren't available, and the live subscription runs client-side anyway.
+if (typeof window !== 'undefined') {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getDatabase(app);
+
+  // The dashboard authenticates with a dedicated read-only account (email/password) so the
+  // Realtime Database rules can require `auth != null` for reads. Credentials come from .env
+  // (VITE_FIREBASE_AUTH_EMAIL / _PASSWORD). These end up in the bundle — keep the account
+  // read-only; real protection is the rules.
   const email = import.meta.env.VITE_FIREBASE_AUTH_EMAIL;
   const password = import.meta.env.VITE_FIREBASE_AUTH_PASSWORD;
-  if (!email || !password) {
+  if (email && password) {
+    signInWithEmailAndPassword(auth, email, password).catch((error) => {
+      console.error('[firebase] Authentication failed:', error);
+    });
+  } else {
     console.warn('[firebase] No VITE_FIREBASE_AUTH_EMAIL / _PASSWORD set — reads may be denied by rules.');
-    return;
   }
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-  } catch (error) {
-    console.error('[firebase] Authentication failed:', error);
-  }
-};
-
-signIn();
+}
 
 export { db, auth };

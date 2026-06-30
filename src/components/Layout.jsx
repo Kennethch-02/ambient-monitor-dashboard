@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useEnvironment } from '../context/EnvironmentContext';
 import { timeAgo } from '../lib/format';
 import ThemeToggle from './ThemeToggle';
+import BatteryIndicator from './BatteryIndicator';
 
 // Dashboard shell: fixed ambient backdrop + header + main content area.
 const Layout = ({ children }) => {
@@ -135,6 +136,7 @@ const Layout = ({ children }) => {
             </span>
           </div>
 
+          <BatteryIndicator battery={current.battery} batteryVoltage={current.batteryVoltage} />
           <ThemeToggle />
         </header>
 

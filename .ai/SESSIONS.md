@@ -55,6 +55,18 @@
 - EnvironmentContext/data layer untouched. No browser tool → couldn't screenshot; user reviews visually.
 - USER TODO: fill VITE_FIREBASE_AUTH_PASSWORD for live data; confirm deploy host; decide if Redesign/ + .ai go public.
 
+## 2026-06-29 — Landing SEO + READMEs + repo links; pushed
+- SEO in index.html: title/description, canonical, robots, Open Graph + Twitter, JSON-LD
+  (WebSite/WebApplication/Person), theme-color, noscript fallback. Added public/{favicon.svg, og.svg,
+  robots.txt, sitemap.xml}. Per-route <title> via `src/lib/seo.js` (Landing/Dashboard/EmbedBuilder).
+- Footer repo links fixed → real repos (firmware + dashboard); profile links kept; noopener noreferrer.
+- New dashboard README (replaced Vite template); firmware README got a live-demo link.
+- All SEO absolute URLs assume **https://ambient.teonix.dev/** (confirm final domain).
+- CAVEAT: og.svg is SVG — Google is fine, but FB/Twitter/LinkedIn need a 1200×630 **PNG** for social
+  previews (no raster tooling here → export og.png and swap og:image). SPA is client-rendered; Google
+  runs JS so it indexes, but SSG/prerender of the landing would be the gold standard (follow-up).
+- Pushed: dashboard 430d5ee, firmware ea34e24.
+
 ## 2026-06-29 — Re-init dashboard repo + run
 - User had deleted the dashboard git + node_modules to restart. Moved Firebase config to `.env`
   (VITE_*), removed anon auth from `firebase.js` (exports only `db`), added `.env.example`, deleted

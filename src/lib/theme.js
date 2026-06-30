@@ -2,6 +2,7 @@
 const KEY = 'amb-theme';
 
 export function getTheme() {
+  if (typeof document === 'undefined') return 'dark'; // SSR / prerender default
   return document.documentElement.classList.contains('light') ? 'light' : 'dark';
 }
 
