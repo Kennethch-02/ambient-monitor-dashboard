@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 // Firebase web config. Values come from .env (VITE_* vars — see .env.example).
 // NOTE: these values are NOT secret. They ship in the client bundle by design and are
@@ -18,8 +19,27 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getDatabase(app);
 
-// Read-only public dashboard: data is world-readable per the RTDB rules, so no auth is
-// needed here. (Anonymous sign-in was removed; the device writes with its own account.)
-export { db };
+// The dashboard authenticates with a dedicated read-only account (email/password) so the
+// Realtime Database rules can require `auth != null` for reads. Credentials come from
+// .env (VITE_FIREBASE_AUTH_EMAIL / _PASSWORD). NOTE: like the rest of the web config these
+// end up in the client bundle — keep this account read-only; real protection is the rules.
+const signIn = async () => {
+  const email = import.meta.env.VITE_FIREBASE_AUTH_EMAIL;
+  const password = import.meta.env.VITE_FIREBASE_AUTH_PASSWORD;
+  if (!email || !password) {
+    console.warn('[firebase] No VITE_FIREBASE_AUTH_EMAIL / _PASSWORD set — reads may be denied by rules.');
+    return;
+  }
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    console.error('[firebase] Authentication failed:', error);
+  }
+};
+
+signIn();
+
+export { db, auth };
