@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import EmbedWidget from '../components/EmbedWidget';
 import { getTheme } from '../lib/theme';
+import { useDocumentTitle } from '../lib/seo';
 
 const WIDGET_OPTS = [
   ['temperature', 'Temp'],
@@ -40,6 +41,7 @@ const groupLabelStyle = {
 };
 
 export default function EmbedBuilder() {
+  useDocumentTitle('Embed builder · Ambient Monitor');
   const [cfg, setCfg] = useState({ widget: 'temperature', theme: 'auto', range: '1h', bg: 'transparent' });
   const [copied, setCopied] = useState(false);
 

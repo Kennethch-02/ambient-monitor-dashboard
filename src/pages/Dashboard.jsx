@@ -3,6 +3,7 @@ import React from 'react';
 import { useEnvironment } from '../context/EnvironmentContext';
 import { hasRealData, isStale, timeAgo, fmt } from '../lib/format';
 import { buildPath } from '../lib/spark';
+import { useDocumentTitle } from '../lib/seo';
 import Layout from '../components/Layout';
 import HeroStatus from '../components/HeroStatus';
 import MetricCard from '../components/MetricCard';
@@ -249,6 +250,7 @@ class DashboardBoundary extends React.Component {
 }
 
 const Dashboard = () => {
+  useDocumentTitle('Dashboard · Ambient Monitor');
   const { current, historical } = useEnvironment();
 
   const loading = !hasRealData(current) && historical.length === 0;

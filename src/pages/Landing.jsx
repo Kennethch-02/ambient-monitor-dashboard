@@ -4,6 +4,11 @@ import ThemeToggle from '../components/ThemeToggle';
 import HardwareDiagram from '../components/HardwareDiagram';
 import { useEnvironment } from '../context/EnvironmentContext';
 import { buildPath } from '../lib/spark';
+import { useDocumentTitle } from '../lib/seo';
+
+const GH_PROFILE = 'https://github.com/Kennethch-02';
+const GH_FIRMWARE = 'https://github.com/Kennethch-02/ambient_monitor_scripts';
+const GH_DASHBOARD = 'https://github.com/Kennethch-02/ambient-monitor-dashboard';
 
 // ---- ported logic arrays (mockup lines 742–773) ----
 const techBadges = ['React 18', 'Vite 6', 'Tailwind 3.4', 'Recharts', 'Firebase RTDB', 'ESP32 · PlatformIO'];
@@ -45,6 +50,7 @@ const steps = [
 ];
 
 function Landing() {
+  useDocumentTitle('Ambient Monitor — live room temperature, light & motion');
   const env = useEnvironment();
   const { current, historical } = env;
   const [openStep, setOpenStep] = useState(1);
@@ -89,7 +95,7 @@ function Landing() {
             <span style={{ fontWeight: 600, fontSize: '16px' }}>Ambient Monitor</span>
           </Link>
           <ThemeToggle />
-          <a href="https://github.com/Kennethch-02" target="_blank" rel="noopener" style={{ textDecoration: 'none', fontSize: '13.5px', fontWeight: 600, color: 'var(--txt2)', padding: '9px 15px', borderRadius: '10px', border: '1px solid var(--line)', background: 'var(--bg1)' }}>GitHub</a>
+          <a href={GH_PROFILE} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontSize: '13.5px', fontWeight: 600, color: 'var(--txt2)', padding: '9px 15px', borderRadius: '10px', border: '1px solid var(--line)', background: 'var(--bg1)' }}>GitHub</a>
         </header>
 
         {/* A. HERO */}
@@ -105,7 +111,7 @@ function Landing() {
             <p style={{ margin: '20px 0 0', fontSize: '17px', lineHeight: 1.55, color: 'var(--txt2)', maxWidth: '48ch' }}>A physical sensor node measures a real room and streams it to the web. Watch the temperature, humidity, ambient light and movement update in real time — and embed the live readout anywhere.</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '30px' }}>
               <Link to="/dashboard" style={{ textDecoration: 'none', padding: '14px 24px', borderRadius: '12px', background: 'var(--optimal)', color: 'var(--bg0)', border: 'none', fontWeight: 600, fontSize: '15px', cursor: 'pointer', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center' }}>Open dashboard →</Link>
-              <a href="https://github.com/Kennethch-02" target="_blank" rel="noopener" style={{ textDecoration: 'none', padding: '14px 24px', borderRadius: '12px', background: 'var(--bg1)', color: 'var(--txt)', border: '1px solid var(--line)', fontWeight: 600, fontSize: '15px', display: 'inline-flex', alignItems: 'center', gap: '9px' }}>
+              <a href={GH_PROFILE} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', padding: '14px 24px', borderRadius: '12px', background: 'var(--bg1)', color: 'var(--txt)', border: '1px solid var(--line)', fontWeight: 600, fontSize: '15px', display: 'inline-flex', alignItems: 'center', gap: '9px' }}>
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.8 21.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.4-2.2-.2-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.6 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.6.6.7 1 1.6 1 2.7 0 3.9-2.4 4.8-4.6 5 .3.3.7 1 .7 2v3c0 .3.2.6.7.5A10 10 0 0 0 12 2z" /></svg>View on GitHub
               </a>
             </div>
@@ -263,8 +269,8 @@ function Landing() {
               <div>
                 <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--txt3)', marginBottom: '12px' }}>Repositories</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '9px', fontSize: '13.5px' }}>
-                  <a href="https://github.com/Kennethch-02" target="_blank" rel="noopener" style={{ color: 'var(--txt2)', textDecoration: 'none', fontFamily: "'JetBrains Mono',monospace" }}>ambient_monitor_scripts</a>
-                  <a href="https://github.com/Kennethch-02" target="_blank" rel="noopener" style={{ color: 'var(--txt2)', textDecoration: 'none', fontFamily: "'JetBrains Mono',monospace" }}>ambient-monitor-dashboard</a>
+                  <a href={GH_FIRMWARE} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--txt2)', textDecoration: 'none', fontFamily: "'JetBrains Mono',monospace" }}>ambient_monitor_scripts</a>
+                  <a href={GH_DASHBOARD} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--txt2)', textDecoration: 'none', fontFamily: "'JetBrains Mono',monospace" }}>ambient-monitor-dashboard</a>
                 </div>
               </div>
               <div>

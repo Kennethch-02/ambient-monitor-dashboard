@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /embed.html
+
+Sitemap: https://ambient.teonix.dev/sitemap.xml
