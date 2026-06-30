@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg0: oklch(0.155 0.012 215);
+      --bg1: oklch(0.205 0.015 215);
+      --bg1b: oklch(0.235 0.017 215);
+      --bg2: oklch(0.265 0.018 215);
+      --line: oklch(0.33 0.02 215);
+      --line-soft: oklch(0.275 0.016 215);
+      --txt: oklch(0.965 0.006 215);
+      --txt2: oklch(0.74 0.013 215);
+      --txt3: oklch(0.56 0.015 215);
+      --optimal: oklch(0.82 0.13 168);
+      --warm: oklch(0.76 0.15 48);
+      --cold: oklch(0.78 0.12 245);
+      --amber: oklch(0.85 0.13 88);
+      --cyan: oklch(0.82 0.10 215);
+      --violet: oklch(0.78 0.13 292);
+      --muted: oklch(0.64 0.04 250);
+      --shadow: 0 1px 0 oklch(0.5 0.02 215 / 0.04) inset, 0 18px 40px -24px oklch(0.05 0.02 215 / 0.8);
+    }
+    .light{
+      --bg0: oklch(0.972 0.006 210);
+      --bg1: oklch(0.995 0.003 210);
+      --bg1b: oklch(0.985 0.005 210);
+      --bg2: oklch(0.955 0.008 210);
+      --line: oklch(0.9 0.012 215);
+      --line-soft: oklch(0.93 0.009 215);
+      --txt: oklch(0.26 0.022 220);
+      --txt2: oklch(0.46 0.02 220);
+      --txt3: oklch(0.62 0.018 220);
+      --optimal: oklch(0.62 0.13 168);
+      --warm: oklch(0.62 0.16 48);
+      --cold: oklch(0.6 0.14 250);
+      --amber: oklch(0.68 0.14 80);
+      --cyan: oklch(0.6 0.12 230);
+      --violet: oklch(0.58 0.15 292);
+      --muted: oklch(0.55 0.04 250);
+      --shadow: 0 1px 0 oklch(1 0 0 / 0.6) inset, 0 18px 40px -28px oklch(0.5 0.04 215 / 0.35);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    @keyframes amb-pulse{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1.1)}}
+    @keyframes amb-ring{0%{opacity:.6;transform:scale(.6)}70%{opacity:0}100%{opacity:0;transform:scale(2.4)}}
+    @keyframes amb-draw{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+    @keyframes amb-fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes amb-breathe{0%,100%{opacity:.5}50%{opacity:.9}}
+    @keyframes amb-spin{to{transform:rotate(360deg)}}
+    @keyframes amb-blink{0%,45%{opacity:1}55%,100%{opacity:.12}}
+    .amb-draw{stroke-dasharray:1000;animation:amb-draw 1.6s cubic-bezier(.45,0,.15,1) forwards}
+    .amb-enter{animation:amb-fade .6s cubic-bezier(.2,.7,.2,1) both}
+    *::-webkit-scrollbar{width:10px;height:10px}
+    *::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:3px solid transparent;background-clip:content-box}
+    @media (max-width:860px){
+      [data-hero],[data-hw],[data-cols],[data-foot]{grid-template-columns:1fr !important}
+      [data-embed-cols]{grid-template-columns:1fr !important}
+      [data-hero]{gap:30px !important}
+    }
+    @media (max-width:560px){
+      [data-foot]{grid-template-columns:1fr 1fr !important}
+    }
+  </style>
+</helmet>
+
+<div class="{{ themeClass }}" style="min-height:100vh;background:var(--bg0);color:var(--txt);font-family:'Space Grotesk',system-ui,sans-serif;font-feature-settings:'ss01';position:relative;overflow-x:hidden">
+
+  <!-- ambient backdrop -->
+  <div aria-hidden="true" style="position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(900px 520px at 82% -8%, color-mix(in oklch, var(--optimal) 16%, transparent), transparent 60%), radial-gradient(760px 480px at 6% 4%, color-mix(in oklch, var(--cyan) 12%, transparent), transparent 58%)"></div>
+
+  <!-- =================== DASHBOARD =================== -->
+  <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+  <main style="position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:26px 22px 120px">
+
+    <!-- header -->
+    <header style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px">
+      <div style="display:flex;align-items:center;gap:12px;margin-right:auto">
+        <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(150deg,color-mix(in oklch,var(--optimal) 40%,var(--bg2)),var(--bg2));display:grid;place-items:center;border:1px solid var(--line)">
+          <span style="width:13px;height:13px;border-radius:50%;background:var(--optimal);box-shadow:0 0 14px var(--optimal)"></span>
+        </div>
+        <div>
+          <div style="font-weight:600;font-size:17px;letter-spacing:-.01em">Ambient Monitor</div>
+          <div style="font-size:11.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace">Living Room · node-01</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 13px;border-radius:999px;background:color-mix(in oklch,var(--optimal) 12%,var(--bg1));border:1px solid color-mix(in oklch,var(--optimal) 30%,var(--line));white-space:nowrap">
+        <span style="position:relative;width:8px;height:8px"><span style="position:absolute;inset:0;border-radius:50%;background:var(--optimal);animation:amb-pulse 2s ease-in-out infinite"></span></span>
+        <span style="font-size:12px;font-weight:600;color:var(--optimal)">LIVE</span>
+        <span style="font-size:11.5px;color:var(--txt2);font-family:'JetBrains Mono',monospace">updated {{ updatedAgo }}</span>
+      </div>
+
+      <button onClick="{{ toggleTheme }}" style="width:38px;height:38px;border-radius:11px;background:var(--bg1);border:1px solid var(--line);color:var(--txt2);cursor:pointer;display:grid;place-items:center" title="Toggle theme">
+        <sc-if value="{{ isDark }}" hint-placeholder-val="{{ true }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg></sc-if>
+        <sc-if value="{{ isLight }}" hint-placeholder-val="{{ false }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></sc-if>
+      </button>
+    </header>
+
+    <!-- state selector (demo of designed states) -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+      <span style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.12em;margin-right:2px">Preview state</span>
+      <sc-for list="{{ stateOptions }}" as="opt" hint-placeholder-count="4">
+        <button onClick="{{ opt.onClick }}" style="{{ opt.style }}">{{ opt.label }}</button>
+      </sc-for>
+    </div>
+
+    <!-- LIVE body -->
+    <sc-if value="{{ stateLive }}" hint-placeholder-val="{{ true }}">
+    <div>
+      <!-- hero status -->
+      <section style="position:relative;overflow:hidden;border-radius:22px;border:1px solid color-mix(in oklch,var(--optimal) 26%,var(--line));background:linear-gradient(135deg,color-mix(in oklch,var(--optimal) 13%,var(--bg1)),var(--bg1) 60%);padding:28px 28px;margin-bottom:18px;box-shadow:var(--shadow)">
+        <div aria-hidden="true" style="position:absolute;right:-60px;top:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,color-mix(in oklch,var(--optimal) 34%,transparent),transparent 70%);animation:amb-breathe 6s ease-in-out infinite"></div>
+        <div style="position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap">
+          <div>
+            <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 11px;border-radius:999px;background:color-mix(in oklch,var(--optimal) 18%,transparent);color:var(--optimal);font-size:12px;font-weight:600;margin-bottom:14px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              All readings optimal
+            </div>
+            <h1 style="margin:0;font-size:34px;font-weight:600;letter-spacing:-.02em;line-height:1.05">{{ roomHeadline }}</h1>
+            <p style="margin:8px 0 0;color:var(--txt2);font-size:14.5px;max-width:46ch">{{ roomSub }}</p>
+          </div>
+          <div style="display:flex;gap:26px;font-family:'JetBrains Mono',monospace">
+            <div><div style="font-size:11px;color:var(--txt3);letter-spacing:.08em">FEELS LIKE</div><div style="font-size:26px;font-weight:600;margin-top:3px">{{ feelsLike }}°</div></div>
+            <div><div style="font-size:11px;color:var(--txt3);letter-spacing:.08em">COMFORT</div><div style="font-size:26px;font-weight:600;margin-top:3px;color:var(--optimal)">{{ comfortScore }}</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- metric cards -->
+      <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:14px;margin-bottom:18px">
+
+        <!-- Temperature -->
+        <article style="position:relative;overflow:hidden;border-radius:18px;background:var(--bg1);border:1px solid color-mix(in oklch,var(--warm) 22%,var(--line));padding:18px;box-shadow:var(--shadow)">
+          <div aria-hidden="true" style="position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,color-mix(in oklch,var(--warm) 24%,transparent),transparent 70%)"></div>
+          <div style="position:relative;display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <span style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in oklch,var(--warm) 16%,var(--bg2));color:var(--warm)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 14.76V4a2 2 0 0 0-4 0v10.76a4 4 0 1 0 4 0z"/></svg></span>
+            <span style="font-size:13px;color:var(--txt2);font-weight:500">Temperature</span>
+            <span style="margin-left:auto;font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:999px;background:color-mix(in oklch,var(--optimal) 16%,transparent);color:var(--optimal)">{{ tempQuality }}</span>
+          </div>
+          <div style="position:relative;display:flex;align-items:baseline;gap:5px;font-family:'JetBrains Mono',monospace">
+            <span style="font-size:40px;font-weight:600;letter-spacing:-.02em">{{ tempVal }}</span>
+            <span style="font-size:16px;color:var(--txt3)">°C</span>
+          </div>
+          <div style="position:relative;display:flex;align-items:center;justify-content:space-between;margin-top:10px">
+            <span style="font-size:11.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace">{{ tempTrend }} vs prev</span>
+            <svg width="86" height="30" viewBox="0 0 120 34" preserveAspectRatio="none" style="overflow:visible"><path d="{{ tempSparkArea }}" fill="color-mix(in oklch,var(--warm) 16%,transparent)"/><path d="{{ tempSparkLine }}" fill="none" stroke="var(--warm)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </article>
+
+        <!-- Humidity -->
+        <article style="position:relative;overflow:hidden;border-radius:18px;background:var(--bg1);border:1px solid color-mix(in oklch,var(--cyan) 22%,var(--line));padding:18px;box-shadow:var(--shadow)">
+          <div aria-hidden="true" style="position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,color-mix(in oklch,var(--cyan) 22%,transparent),transparent 70%)"></div>
+          <div style="position:relative;display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <span style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in oklch,var(--cyan) 16%,var(--bg2));color:var(--cyan)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7S5 10 5 14a7 7 0 0 0 14 0c0-4-7-11.3-7-11.3z"/></svg></span>
+            <span style="font-size:13px;color:var(--txt2);font-weight:500">Humidity</span>
+            <span style="margin-left:auto;font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:999px;background:color-mix(in oklch,var(--optimal) 16%,transparent);color:var(--optimal)">{{ humQuality }}</span>
+          </div>
+          <div style="position:relative;display:flex;align-items:baseline;gap:5px;font-family:'JetBrains Mono',monospace">
+            <span style="font-size:40px;font-weight:600;letter-spacing:-.02em">{{ humVal }}</span>
+            <span style="font-size:16px;color:var(--txt3)">%</span>
+          </div>
+          <div style="position:relative;display:flex;align-items:center;justify-content:space-between;margin-top:10px">
+            <span style="font-size:11.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace">{{ humTrend }} vs prev</span>
+            <svg width="86" height="30" viewBox="0 0 120 34" preserveAspectRatio="none" style="overflow:visible"><path d="{{ humSparkArea }}" fill="color-mix(in oklch,var(--cyan) 16%,transparent)"/><path d="{{ humSparkLine }}" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </article>
+
+        <!-- Light -->
+        <article style="position:relative;overflow:hidden;border-radius:18px;background:var(--bg1);border:1px solid color-mix(in oklch,var(--amber) 22%,var(--line));padding:18px;box-shadow:var(--shadow)">
+          <div aria-hidden="true" style="position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,color-mix(in oklch,var(--amber) 22%,transparent),transparent 70%)"></div>
+          <div style="position:relative;display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <span style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in oklch,var(--amber) 16%,var(--bg2));color:var(--amber)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></svg></span>
+            <span style="font-size:13px;color:var(--txt2);font-weight:500">Ambient Light</span>
+            <span style="margin-left:auto;font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:999px;background:color-mix(in oklch,var(--optimal) 16%,transparent);color:var(--optimal)">{{ lightQuality }}</span>
+          </div>
+          <div style="position:relative;display:flex;align-items:baseline;gap:5px;font-family:'JetBrains Mono',monospace">
+            <span style="font-size:40px;font-weight:600;letter-spacing:-.02em">{{ lightVal }}</span>
+            <span style="font-size:16px;color:var(--txt3)">lux</span>
+          </div>
+          <div style="position:relative;display:flex;align-items:center;justify-content:space-between;margin-top:10px">
+            <span style="font-size:11.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace">{{ lightTrend }} vs prev</span>
+            <svg width="86" height="30" viewBox="0 0 120 34" preserveAspectRatio="none" style="overflow:visible"><path d="{{ lightSparkArea }}" fill="color-mix(in oklch,var(--amber) 16%,transparent)"/><path d="{{ lightSparkLine }}" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </article>
+
+        <!-- Motion -->
+        <article style="position:relative;overflow:hidden;border-radius:18px;background:var(--bg1);border:1px solid color-mix(in oklch,var(--violet) 24%,var(--line));padding:18px;box-shadow:var(--shadow)">
+          <div aria-hidden="true" style="position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,color-mix(in oklch,var(--violet) 24%,transparent),transparent 70%)"></div>
+          <div style="position:relative;display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <span style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in oklch,var(--violet) 16%,var(--bg2));color:var(--violet)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12a7 7 0 0 1 7-7M5 12a7 7 0 0 0 7 7M2 12a10 10 0 0 1 10-10"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg></span>
+            <span style="font-size:13px;color:var(--txt2);font-weight:500">Movement</span>
+            <span style="margin-left:auto;position:relative;width:9px;height:9px"><span style="position:absolute;inset:-6px;border-radius:50%;background:var(--violet);animation:amb-ring 1.8s ease-out infinite"></span><span style="position:absolute;inset:0;border-radius:50%;background:var(--violet)"></span></span>
+          </div>
+          <div style="position:relative;display:flex;align-items:baseline;gap:8px;font-family:'JetBrains Mono',monospace">
+            <span style="font-size:27px;font-weight:600;color:var(--violet)">{{ motionLabel }}</span>
+          </div>
+          <div style="position:relative;display:flex;align-items:center;justify-content:space-between;margin-top:13px">
+            <span style="font-size:11.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace">last {{ lastMotion }}</span>
+            <span style="font-size:11.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace">{{ motionEvents }} events / 1h</span>
+          </div>
+        </article>
+      </section>
+
+      <!-- chart + summary -->
+      <section style="display:grid;grid-template-columns:1.7fr 1fr;gap:14px;margin-bottom:18px" data-cols>
+        <!-- chart -->
+        <div style="border-radius:20px;background:var(--bg1);border:1px solid var(--line);padding:20px 20px 14px;box-shadow:var(--shadow)">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap">
+            <div style="margin-right:auto"><div style="font-size:15px;font-weight:600">History</div><div style="font-size:11.5px;color:var(--txt3)">Last hour · 60 samples</div></div>
+            <div style="display:flex;gap:4px;background:var(--bg0);border:1px solid var(--line);border-radius:10px;padding:3px">
+              <sc-for list="{{ metricTabs }}" as="tab" hint-placeholder-count="3">
+                <button onClick="{{ tab.onClick }}" style="{{ tab.style }}">{{ tab.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="position:relative">
+            <svg viewBox="0 0 640 200" preserveAspectRatio="none" style="width:100%;height:200px;overflow:visible">
+              <defs><linearGradient id="amb-chart-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="{{ chartHue }}" stop-opacity="0.28"/><stop offset="100%" stop-color="{{ chartHue }}" stop-opacity="0"/></linearGradient></defs>
+              <line x1="0" y1="50" x2="640" y2="50" stroke="var(--line-soft)" stroke-width="1"/>
+              <line x1="0" y1="100" x2="640" y2="100" stroke="var(--line-soft)" stroke-width="1"/>
+              <line x1="0" y1="150" x2="640" y2="150" stroke="var(--line-soft)" stroke-width="1"/>
+              <path d="{{ chartArea }}" fill="url(#amb-chart-fill)"/>
+              <path d="{{ chartLine }}" fill="none" stroke="{{ chartHue }}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="{{ lastPointX }}" cy="{{ lastPointY }}" r="4.5" fill="{{ chartHue }}"/>
+              <circle cx="{{ lastPointX }}" cy="{{ lastPointY }}" r="9" fill="none" stroke="{{ chartHue }}" stroke-opacity="0.4" stroke-width="2"><animate attributeName="r" values="6;12;6" dur="2.4s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values="0.5;0;0.5" dur="2.4s" repeatCount="indefinite"/></circle>
+            </svg>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:10.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace">
+              <sc-for list="{{ chartTimes }}" as="t" hint-placeholder-count="5"><span>{{ t }}</span></sc-for>
+            </div>
+          </div>
+          <div style="display:flex;gap:18px;margin-top:10px;font-size:12px;color:var(--txt2);font-family:'JetBrains Mono',monospace">
+            <span>min <b style="color:var(--txt)">{{ chartMin }}</b></span>
+            <span>max <b style="color:var(--txt)">{{ chartMax }}</b></span>
+            <span>now <b style="color:{{ chartHue }}">{{ chartNow }}</b></span>
+          </div>
+        </div>
+
+        <!-- summary -->
+        <div style="border-radius:20px;background:var(--bg1);border:1px solid var(--line);padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column">
+          <div style="font-size:15px;font-weight:600;margin-bottom:3px">Hour summary</div>
+          <div style="font-size:11.5px;color:var(--txt3);margin-bottom:16px">Rolling averages</div>
+          <div style="display:flex;flex-direction:column;gap:11px;flex:1">
+            <div style="display:flex;align-items:center;gap:12px"><span style="width:7px;height:34px;border-radius:4px;background:var(--warm)"></span><div style="margin-right:auto"><div style="font-size:12px;color:var(--txt3)">Avg temperature</div></div><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600">{{ avgTemp }}<span style="font-size:12px;color:var(--txt3)">°C</span></div></div>
+            <div style="display:flex;align-items:center;gap:12px"><span style="width:7px;height:34px;border-radius:4px;background:var(--cyan)"></span><div style="margin-right:auto"><div style="font-size:12px;color:var(--txt3)">Avg humidity</div></div><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600">{{ avgHum }}<span style="font-size:12px;color:var(--txt3)">%</span></div></div>
+            <div style="display:flex;align-items:center;gap:12px"><span style="width:7px;height:34px;border-radius:4px;background:var(--amber)"></span><div style="margin-right:auto"><div style="font-size:12px;color:var(--txt3)">Avg light</div></div><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600">{{ avgLight }}<span style="font-size:12px;color:var(--txt3)">lux</span></div></div>
+            <div style="display:flex;align-items:center;gap:12px"><span style="width:7px;height:34px;border-radius:4px;background:var(--violet)"></span><div style="margin-right:auto"><div style="font-size:12px;color:var(--txt3)">Motion events</div></div><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600">{{ motionEvents }}</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- motion timeline -->
+      <section style="border-radius:20px;background:var(--bg1);border:1px solid var(--line);padding:20px;margin-bottom:18px;box-shadow:var(--shadow)">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><div style="font-size:15px;font-weight:600;margin-right:auto">Motion timeline</div><div style="font-size:11.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace">last 60 min</div></div>
+        <div style="position:relative;height:46px;display:flex;align-items:flex-end;gap:3px">
+          <sc-for list="{{ motionTicks }}" as="m" hint-placeholder-count="40">
+            <span style="{{ m.style }}"></span>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:10.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace"><span>-60m</span><span>-40m</span><span>-20m</span><span>now</span></div>
+      </section>
+
+      <!-- embed snippet teaser -->
+      <section style="border-radius:20px;background:linear-gradient(135deg,color-mix(in oklch,var(--cyan) 9%,var(--bg1)),var(--bg1));border:1px solid var(--line);padding:20px;box-shadow:var(--shadow);display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+        <div style="margin-right:auto"><div style="font-size:15px;font-weight:600;margin-bottom:4px">Embed this room on your site</div><div style="font-size:12.5px;color:var(--txt2);max-width:48ch">Drop a live widget into any page with one line of HTML. Pick the metric, theme and background.</div></div>
+        <button onClick="{{ goEmbed }}" style="padding:11px 18px;border-radius:11px;background:var(--optimal);color:var(--bg0);border:none;font-weight:600;font-size:13.5px;cursor:pointer;font-family:inherit">Open embed builder →</button>
+      </section>
+    </div>
+    </sc-if>
+
+    <!-- LOADING -->
+    <sc-if value="{{ stateLoading }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:14px;padding:40px;border-radius:20px;background:var(--bg1);border:1px solid var(--line)">
+        <span style="width:26px;height:26px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--optimal);animation:amb-spin .9s linear infinite"></span>
+        <div><div style="font-weight:600;font-size:15px">Connecting to sensor node…</div><div style="font-size:12.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace">subscribing to /ambient_data</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:14px">
+        <sc-for list="{{ skeletons }}" as="s" hint-placeholder-count="4">
+          <div style="height:150px;border-radius:18px;background:linear-gradient(100deg,var(--bg1) 30%,var(--bg1b) 50%,var(--bg1) 70%);background-size:200% 100%;border:1px solid var(--line);animation:amb-breathe 1.6s ease-in-out infinite"></div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- OFFLINE / EMPTY -->
+    <sc-if value="{{ stateOffline }}" hint-placeholder-val="{{ false }}">
+    <div style="display:grid;place-items:center;padding:64px 24px;border-radius:22px;background:var(--bg1);border:1px solid var(--line);text-align:center">
+      <div style="width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:color-mix(in oklch,var(--muted) 14%,var(--bg2));color:var(--muted);margin-bottom:18px"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2l20 20M8.5 16.5a5 5 0 0 1 7 0M5 12.9a10 10 0 0 1 4-2.6M2 8.8a15 15 0 0 1 4.2-2.6M22 8.8a15 15 0 0 0-6-3.4M12 20h.01"/></svg></div>
+      <h2 style="margin:0 0 8px;font-size:20px;font-weight:600">Sensor node is offline</h2>
+      <p style="margin:0 0 20px;color:var(--txt2);font-size:14px;max-width:42ch">No readings received in the last few minutes. The ESP32 may be powered down or off the network. Showing last known state.</p>
+      <div style="display:flex;gap:18px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--txt3)"><span>last seen · 6m ago</span><span style="color:var(--muted)">● disconnected</span></div>
+    </div>
+    </sc-if>
+
+    <!-- ERROR -->
+    <sc-if value="{{ stateError }}" hint-placeholder-val="{{ false }}">
+    <div style="display:grid;place-items:center;padding:64px 24px;border-radius:22px;background:color-mix(in oklch,var(--warm) 7%,var(--bg1));border:1px solid color-mix(in oklch,var(--warm) 30%,var(--line));text-align:center">
+      <div style="width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:color-mix(in oklch,var(--warm) 16%,var(--bg2));color:var(--warm);margin-bottom:18px"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div>
+      <h2 style="margin:0 0 8px;font-size:20px;font-weight:600">Couldn't reach the database</h2>
+      <p style="margin:0 0 20px;color:var(--txt2);font-size:14px;max-width:42ch">The connection to Firebase Realtime Database failed. Check the network and try again.</p>
+      <button onClick="{{ goLive }}" style="padding:11px 20px;border-radius:11px;background:var(--warm);color:var(--bg0);border:none;font-weight:600;font-size:13.5px;cursor:pointer;font-family:inherit">Retry connection</button>
+    </div>
+    </sc-if>
+
+  </main>
+  </sc-if>
+
+  <!-- =================== EMBED (placeholder, filled next) =================== -->
+  <sc-if value="{{ isEmbed }}" hint-placeholder-val="{{ false }}">
+  <main style="position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:30px 22px 120px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+      <span style="font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--optimal)">Embed builder</span>
+    </div>
+    <h1 style="margin:0 0 8px;font-size:30px;font-weight:600;letter-spacing:-.02em">Put this room on any website</h1>
+    <p style="margin:0 0 28px;color:var(--txt2);font-size:14.5px;max-width:60ch">A chrome-less, self-contained widget that reads the same live Firebase data. Configure it entirely through the URL — then paste one line of HTML. It stays crisp down to 320×180.</p>
+
+    <div style="display:grid;grid-template-columns:300px 1fr;gap:20px" data-embed-cols>
+      <!-- controls -->
+      <aside style="border-radius:18px;background:var(--bg1);border:1px solid var(--line);padding:18px;box-shadow:var(--shadow);align-self:start">
+        <div style="font-size:12px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Widget</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px">
+          <sc-for list="{{ widgetBtns }}" as="b" hint-placeholder-count="6"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for>
+        </div>
+        <div style="font-size:12px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Theme</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px">
+          <sc-for list="{{ themeBtns }}" as="b" hint-placeholder-count="3"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for>
+        </div>
+        <div style="font-size:12px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">History range</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px">
+          <sc-for list="{{ rangeBtns }}" as="b" hint-placeholder-count="3"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for>
+        </div>
+        <div style="font-size:12px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Background</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px">
+          <sc-for list="{{ bgBtns }}" as="b" hint-placeholder-count="2"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for>
+        </div>
+      </aside>
+
+      <!-- preview + snippet -->
+      <section style="display:flex;flex-direction:column;gap:18px;min-width:0">
+        <!-- host mock -->
+        <div style="border-radius:18px;border:1px solid var(--line);overflow:hidden">
+          <div style="display:flex;align-items:center;gap:7px;padding:10px 14px;background:var(--bg2);border-bottom:1px solid var(--line)">
+            <span style="width:10px;height:10px;border-radius:50%;background:oklch(0.7 0.16 25)"></span><span style="width:10px;height:10px;border-radius:50%;background:oklch(0.82 0.15 85)"></span><span style="width:10px;height:10px;border-radius:50%;background:oklch(0.78 0.14 150)"></span>
+            <span style="margin-left:8px;font-size:11.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace">your-website.com — live preview</span>
+          </div>
+          <div style="{{ emHostStyle }};padding:44px 24px;display:grid;place-items:center;min-height:280px">
+            <!-- THE WIDGET -->
+            <div class="{{ emPreviewClass }}" style="{{ emBgStyle }};width:340px;height:190px;border-radius:16px;overflow:hidden;box-shadow:0 18px 50px -22px oklch(0.05 0.02 215/.6);backdrop-filter:blur(8px);color:var(--txt);font-family:'Space Grotesk',sans-serif">
+
+              <sc-if value="{{ emIsSingle }}" hint-placeholder-val="{{ true }}">
+              <div style="height:100%;padding:18px 18px 16px;display:flex;flex-direction:column">
+                <div style="display:flex;align-items:center;gap:9px">
+                  <span style="width:10px;height:10px;border-radius:50%;background:{{ emHue }};box-shadow:0 0 12px {{ emHue }}"></span>
+                  <span style="font-size:13px;color:var(--txt2);font-weight:500">{{ emLabel }}</span>
+                  <span style="margin-left:auto;display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:var(--optimal)"><span style="width:6px;height:6px;border-radius:50%;background:var(--optimal)"></span>LIVE</span>
+                </div>
+                <div style="margin-top:auto;display:flex;align-items:baseline;gap:5px;font-family:'JetBrains Mono',monospace">
+                  <span style="font-size:46px;font-weight:600;letter-spacing:-.02em;color:{{ emHue }}">{{ emVal }}</span>
+                  <span style="font-size:17px;color:var(--txt3)">{{ emUnit }}</span>
+                </div>
+                <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:8px">
+                  <div style="display:flex;flex-direction:column;gap:6px">
+                    <span style="font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:999px;background:color-mix(in oklch,var(--optimal) 16%,transparent);color:var(--optimal);align-self:flex-start">{{ emQ }}</span>
+                    <sc-if value="{{ emShowSpark }}" hint-placeholder-val="{{ true }}"><span style="font-size:10px;color:var(--txt3);font-family:'JetBrains Mono',monospace">{{ emRangeLabel }}</span></sc-if>
+                  </div>
+                  <sc-if value="{{ emShowSpark }}" hint-placeholder-val="{{ true }}">
+                  <svg width="120" height="34" viewBox="0 0 120 34" preserveAspectRatio="none" style="overflow:visible"><path d="{{ emSparkArea }}" fill="color-mix(in oklch,{{ emHue }} 16%,transparent)"/><path d="{{ emSparkLine }}" fill="none" stroke="{{ emHue }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </sc-if>
+                </div>
+              </div>
+              </sc-if>
+
+              <sc-if value="{{ emIsMotion }}" hint-placeholder-val="{{ false }}">
+              <div style="height:100%;padding:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px">
+                <span style="position:relative;width:46px;height:46px;display:grid;place-items:center"><span style="position:absolute;inset:0;border-radius:50%;background:color-mix(in oklch,var(--violet) 24%,transparent)"></span><span style="position:absolute;inset:11px;border-radius:50%;background:var(--violet);box-shadow:0 0 20px var(--violet)"></span></span>
+                <div><div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;color:var(--violet)">Motion active</div><div style="font-size:12px;color:var(--txt3);margin-top:3px">last detected · just now · 7 events / hr</div></div>
+              </div>
+              </sc-if>
+
+              <sc-if value="{{ emIsSummary }}" hint-placeholder-val="{{ false }}">
+              <div style="height:100%;padding:16px 18px;display:flex;flex-direction:column">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:auto"><span style="font-size:13px;font-weight:600">Hour summary</span><span style="margin-left:auto;font-size:10px;font-weight:600;color:var(--optimal)">● LIVE</span></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-family:'JetBrains Mono',monospace">
+                  <div><div style="font-size:10px;color:var(--txt3)">AVG TEMP</div><div style="font-size:22px;font-weight:600;color:var(--warm)">{{ emAvgTemp }}°</div></div>
+                  <div><div style="font-size:10px;color:var(--txt3)">AVG RH</div><div style="font-size:22px;font-weight:600;color:var(--cyan)">{{ emAvgHum }}%</div></div>
+                  <div><div style="font-size:10px;color:var(--txt3)">AVG LIGHT</div><div style="font-size:22px;font-weight:600;color:var(--amber)">{{ emAvgLight }}</div></div>
+                  <div><div style="font-size:10px;color:var(--txt3)">MOTION</div><div style="font-size:22px;font-weight:600;color:var(--violet)">7</div></div>
+                </div>
+              </div>
+              </sc-if>
+
+              <sc-if value="{{ emIsAll }}" hint-placeholder-val="{{ false }}">
+              <div style="height:100%;padding:13px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:9px">
+                <sc-for list="{{ emAllCards }}" as="c" hint-placeholder-count="4">
+                  <div style="border-radius:11px;background:color-mix(in oklch,var(--txt) 5%,transparent);padding:10px 12px;display:flex;flex-direction:column;justify-content:center"><div style="font-size:10px;color:var(--txt3)">{{ c.label }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:600;color:{{ c.hue }}">{{ c.val }}<span style="font-size:10px;color:var(--txt3)">{{ c.unit }}</span></div></div>
+                </sc-for>
+              </div>
+              </sc-if>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- snippet -->
+        <div style="border-radius:18px;background:var(--bg1);border:1px solid var(--line);padding:18px;box-shadow:var(--shadow)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span style="font-size:14px;font-weight:600;margin-right:auto">Paste this snippet</span><button onClick="{{ copyEmbed }}" style="padding:8px 15px;border-radius:9px;background:var(--optimal);color:var(--bg0);border:none;font-weight:600;font-size:12.5px;cursor:pointer;font-family:inherit">{{ copyLabel }}</button></div>
+          <pre style="margin:0;padding:14px 16px;border-radius:11px;background:var(--bg0);border:1px solid var(--line);overflow:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;color:var(--txt2);white-space:pre"><code>{{ embedSnippet }}</code></pre>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11px">
+            <span style="padding:4px 9px;border-radius:7px;background:var(--bg2);color:var(--txt3)">widget=<b style="color:var(--txt)">{{ emWidget }}</b></span>
+            <span style="padding:4px 9px;border-radius:7px;background:var(--bg2);color:var(--txt3)">theme=<b style="color:var(--txt)">{{ emTheme }}</b></span>
+            <span style="padding:4px 9px;border-radius:7px;background:var(--bg2);color:var(--txt3)">range=<b style="color:var(--txt)">{{ emRange }}</b></span>
+            <span style="padding:4px 9px;border-radius:7px;background:var(--bg2);color:var(--txt3)">bg=<b style="color:var(--txt)">{{ emBg }}</b></span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- =================== LANDING (placeholder, filled next) =================== -->
+  <sc-if value="{{ isLanding }}" hint-placeholder-val="{{ false }}">
+  <div style="position:relative;z-index:1">
+
+    <!-- top bar -->
+    <header style="max-width:1120px;margin:0 auto;padding:22px;display:flex;align-items:center;gap:14px">
+      <div style="display:flex;align-items:center;gap:11px;margin-right:auto">
+        <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(150deg,color-mix(in oklch,var(--optimal) 40%,var(--bg2)),var(--bg2));display:grid;place-items:center;border:1px solid var(--line)"><span style="width:11px;height:11px;border-radius:50%;background:var(--optimal);box-shadow:0 0 12px var(--optimal)"></span></div>
+        <span style="font-weight:600;font-size:16px">Ambient Monitor</span>
+      </div>
+      <button onClick="{{ toggleTheme }}" style="width:36px;height:36px;border-radius:10px;background:var(--bg1);border:1px solid var(--line);color:var(--txt2);cursor:pointer;display:grid;place-items:center">
+        <sc-if value="{{ isDark }}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg></sc-if>
+        <sc-if value="{{ isLight }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></sc-if>
+      </button>
+      <a href="https://github.com/Kennethch-02" target="_blank" rel="noopener" style="text-decoration:none;font-size:13.5px;font-weight:600;color:var(--txt2);padding:9px 15px;border-radius:10px;border:1px solid var(--line);background:var(--bg1)">GitHub</a>
+    </header>
+
+    <!-- A. HERO -->
+    <section style="max-width:1120px;margin:0 auto;padding:36px 22px 60px;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center" data-hero>
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:color-mix(in oklch,var(--optimal) 12%,var(--bg1));border:1px solid color-mix(in oklch,var(--optimal) 26%,var(--line));margin-bottom:22px;white-space:nowrap">
+          <span style="position:relative;width:8px;height:8px"><span style="position:absolute;inset:0;border-radius:50%;background:var(--optimal);animation:amb-pulse 2s ease-in-out infinite"></span></span>
+          <span style="font-size:12px;font-weight:600;color:var(--optimal)">Live · ESP32 → Firebase → React</span>
+        </div>
+        <h1 style="margin:0;font-size:clamp(36px,5.4vw,54px);line-height:1.03;font-weight:600;letter-spacing:-.03em;text-wrap:balance">A live window into a room&rsquo;s air, light &amp; motion.</h1>
+        <p style="margin:20px 0 0;font-size:17px;line-height:1.55;color:var(--txt2);max-width:48ch">A physical sensor node measures a real room and streams it to the web. Watch the temperature, humidity, ambient light and movement update in real time — and embed the live readout anywhere.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:30px">
+          <button onClick="{{ goDashboard }}" style="padding:14px 24px;border-radius:12px;background:var(--optimal);color:var(--bg0);border:none;font-weight:600;font-size:15px;cursor:pointer;font-family:inherit">Open dashboard →</button>
+          <a href="https://github.com/Kennethch-02" target="_blank" rel="noopener" style="text-decoration:none;padding:14px 24px;border-radius:12px;background:var(--bg1);color:var(--txt);border:1px solid var(--line);font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:9px"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.8 21.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.4-2.2-.2-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.6 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.6.6.7 1 1.6 1 2.7 0 3.9-2.4 4.8-4.6 5 .3.3.7 1 .7 2v3c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>View on GitHub</a>
+        </div>
+      </div>
+      <!-- live preview widget -->
+      <div style="position:relative;display:grid;place-items:center;min-height:280px">
+        <div aria-hidden="true" style="position:absolute;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,color-mix(in oklch,var(--warm) 22%,transparent),transparent 65%)"></div>
+        <div style="position:relative;width:360px;max-width:100%;border-radius:18px;background:var(--bg1);border:1px solid var(--line);box-shadow:0 30px 70px -30px oklch(0.05 0.02 215/.8);padding:22px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:24px">
+            <span style="width:11px;height:11px;border-radius:50%;background:var(--warm);box-shadow:0 0 12px var(--warm)"></span>
+            <span style="font-size:13.5px;color:var(--txt2);font-weight:500">Temperature</span>
+            <span style="margin-left:auto;display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;color:var(--optimal)"><span style="position:relative;width:7px;height:7px"><span style="position:absolute;inset:0;border-radius:50%;background:var(--optimal);animation:amb-pulse 2s ease-in-out infinite"></span></span>LIVE</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:6px;font-family:'JetBrains Mono',monospace"><span style="font-size:58px;font-weight:600;letter-spacing:-.02em;color:var(--warm)">{{ heroTemp }}</span><span style="font-size:20px;color:var(--txt3)">°C</span></div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:14px">
+            <span style="font-size:11px;font-weight:600;padding:4px 11px;border-radius:999px;background:color-mix(in oklch,var(--optimal) 16%,transparent);color:var(--optimal)">Optimal</span>
+            <svg width="150" height="40" viewBox="0 0 120 34" preserveAspectRatio="none" style="overflow:visible"><path d="{{ heroSparkArea }}" fill="color-mix(in oklch,var(--warm) 16%,transparent)"/><path d="{{ heroSparkLine }}" fill="none" stroke="var(--warm)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between"><span style="font-size:11px;color:var(--txt3);font-family:'JetBrains Mono',monospace">Living Room · node-01</span><span style="font-size:11px;color:var(--txt3)">embedded live →</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- B. WHAT IT DOES -->
+    <section style="max-width:1120px;margin:0 auto;padding:40px 22px">
+      <div style="max-width:60ch;margin-bottom:34px">
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--optimal);margin-bottom:12px">What it does</div>
+        <h2 style="margin:0;font-size:32px;font-weight:600;letter-spacing:-.02em">An instrument panel for a living space</h2>
+        <p style="margin:14px 0 0;font-size:15.5px;line-height:1.6;color:var(--txt2)">A two-part IoT system. A physical ESP32 node measures the room and pushes readings to Firebase Realtime Database; this React dashboard subscribes live, reads the room&rsquo;s quality, and can be embedded into other sites.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px">
+        <sc-for list="{{ landingFeatures }}" as="f" hint-placeholder-count="6">
+          <article style="border-radius:18px;background:var(--bg1);border:1px solid var(--line);padding:22px;box-shadow:var(--shadow)">
+            <span style="display:inline-flex;width:38px;height:38px;border-radius:11px;background:color-mix(in oklch,{{ f.hue }} 15%,var(--bg2));align-items:center;justify-content:center;margin-bottom:14px"><span style="width:13px;height:13px;border-radius:4px;background:{{ f.hue }}"></span></span>
+            <h3 style="margin:0 0 7px;font-size:16.5px;font-weight:600">{{ f.title }}</h3>
+            <p style="margin:0;font-size:13.5px;line-height:1.55;color:var(--txt2)">{{ f.body }}</p>
+          </article>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- C. HARDWARE -->
+    <section style="max-width:1120px;margin:0 auto;padding:48px 22px">
+      <div style="max-width:60ch;margin-bottom:30px">
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--optimal);margin-bottom:12px">The hardware</div>
+        <h2 style="margin:0;font-size:32px;font-weight:600;letter-spacing:-.02em">One ESP32, four senses</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:18px" data-hw>
+        <!-- diagram -->
+        <div style="border-radius:20px;background:var(--bg1);border:1px solid var(--line);padding:16px;box-shadow:var(--shadow)">
+          <svg viewBox="0 0 720 430" style="width:100%;height:auto;display:block">
+            <defs><pattern id="amb-grid" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M26 0H0V26" fill="none" stroke="var(--line-soft)" stroke-width="1"/></pattern></defs>
+            <rect x="0" y="0" width="720" height="430" fill="url(#amb-grid)" rx="14"/>
+            <!-- edges -->
+            <path d="M210 92 C 280 110, 250 170, 296 190" fill="none" stroke="var(--warm)" stroke-width="2.5"/>
+            <path d="M210 360 C 285 345, 255 290, 296 268" fill="none" stroke="var(--amber)" stroke-width="2.5"/>
+            <path d="M510 92 C 440 110, 470 170, 424 190" fill="none" stroke="var(--violet)" stroke-width="2.5"/>
+            <path d="M510 360 C 440 345, 470 290, 424 268" fill="none" stroke="var(--optimal)" stroke-width="2.5"/>
+            <!-- edge labels -->
+            <g font-family="'JetBrains Mono',monospace" font-size="12" font-weight="600">
+              <rect x="232" y="128" width="62" height="22" rx="6" fill="var(--bg2)"/><text x="263" y="143" fill="var(--warm)" text-anchor="middle">GPIO 4</text>
+              <rect x="214" y="300" width="98" height="22" rx="6" fill="var(--bg2)"/><text x="263" y="315" fill="var(--amber)" text-anchor="middle">SDA21·SCL22</text>
+              <rect x="426" y="128" width="68" height="22" rx="6" fill="var(--bg2)"/><text x="460" y="143" fill="var(--violet)" text-anchor="middle">GPIO 13</text>
+              <rect x="418" y="300" width="86" height="22" rx="6" fill="var(--bg2)"/><text x="461" y="315" fill="var(--optimal)" text-anchor="middle">R25 G26 B27</text>
+            </g>
+            <!-- ESP32 -->
+            <rect x="296" y="160" width="128" height="118" rx="14" fill="var(--bg2)" stroke="var(--line)" stroke-width="1.5"/>
+            <text x="360" y="208" fill="var(--txt)" font-family="'Space Grotesk'" font-size="18" font-weight="600" text-anchor="middle">ESP32</text>
+            <text x="360" y="228" fill="var(--txt3)" font-family="'JetBrains Mono',monospace" font-size="11" text-anchor="middle">upesy_wroom</text>
+            <g fill="var(--line)"><rect x="288" y="178" width="8" height="6" rx="2"/><rect x="288" y="196" width="8" height="6" rx="2"/><rect x="288" y="214" width="8" height="6" rx="2"/><rect x="424" y="178" width="8" height="6" rx="2"/><rect x="424" y="196" width="8" height="6" rx="2"/><rect x="424" y="214" width="8" height="6" rx="2"/></g>
+            <!-- peripherals -->
+            <g font-family="'Space Grotesk'" text-anchor="middle">
+              <rect x="60" y="58" width="150" height="58" rx="12" fill="var(--bg2)" stroke="color-mix(in oklch,var(--warm) 30%,var(--line))" stroke-width="1.5"/><circle cx="84" cy="87" r="7" fill="var(--warm)"/><text x="128" y="82" fill="var(--txt)" font-size="15" font-weight="600">DHT22</text><text x="128" y="101" fill="var(--txt3)" font-size="11">temp · humidity</text>
+              <rect x="60" y="318" width="150" height="58" rx="12" fill="var(--bg2)" stroke="color-mix(in oklch,var(--amber) 30%,var(--line))" stroke-width="1.5"/><circle cx="84" cy="347" r="7" fill="var(--amber)"/><text x="130" y="342" fill="var(--txt)" font-size="15" font-weight="600">BH1750</text><text x="130" y="361" fill="var(--txt3)" font-size="11">ambient light</text>
+              <rect x="510" y="58" width="150" height="58" rx="12" fill="var(--bg2)" stroke="color-mix(in oklch,var(--violet) 30%,var(--line))" stroke-width="1.5"/><circle cx="534" cy="87" r="7" fill="var(--violet)"/><text x="582" y="82" fill="var(--txt)" font-size="15" font-weight="600">PIR</text><text x="582" y="101" fill="var(--txt3)" font-size="11">motion</text>
+              <rect x="510" y="318" width="150" height="58" rx="12" fill="var(--bg2)" stroke="color-mix(in oklch,var(--optimal) 30%,var(--line))" stroke-width="1.5"/><circle cx="534" cy="347" r="7" fill="var(--optimal)"/><text x="588" y="342" fill="var(--txt)" font-size="15" font-weight="600">RGB LED</text><text x="588" y="361" fill="var(--txt3)" font-size="11">status</text>
+            </g>
+          </svg>
+        </div>
+        <!-- connection table -->
+        <div style="border-radius:20px;background:var(--bg1);border:1px solid var(--line);padding:8px 6px;box-shadow:var(--shadow)">
+          <sc-for list="{{ wiringRows }}" as="w" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--line-soft)">
+              <span style="width:9px;height:9px;border-radius:50%;background:{{ w.hue }};flex:none"></span>
+              <div style="min-width:0"><div style="font-size:14px;font-weight:600">{{ w.part }}</div><div style="font-size:11.5px;color:var(--txt3)">{{ w.sub }}</div></div>
+              <div style="margin-left:auto;text-align:right"><div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--txt);font-weight:600">{{ w.pin }}</div><div style="font-size:11px;color:var(--txt3)">{{ w.note }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- LED legend -->
+      <div style="margin-top:18px;border-radius:20px;background:var(--bg1);border:1px solid var(--line);padding:20px;box-shadow:var(--shadow)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px"><span style="font-size:15px;font-weight:600;margin-right:auto">Status-LED legend</span><span style="font-size:11.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace">onboard RGB</span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+          <sc-for list="{{ ledLegend }}" as="l" hint-placeholder-count="7">
+            <div style="display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:12px;background:var(--bg0);border:1px solid var(--line-soft)">
+              <span style="width:14px;height:14px;border-radius:50%;flex:none;{{ l.dot }}"></span>
+              <div><div style="font-size:13px;font-weight:600">{{ l.label }}</div><div style="font-size:11px;color:var(--txt3);font-family:'JetBrains Mono',monospace">{{ l.sub }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- D. RECREATE -->
+    <section style="max-width:860px;margin:0 auto;padding:48px 22px">
+      <div style="max-width:60ch;margin-bottom:28px">
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--optimal);margin-bottom:12px">Build your own</div>
+        <h2 style="margin:0;font-size:32px;font-weight:600;letter-spacing:-.02em">Recreate it in six steps</h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="6">
+          <div style="border-radius:16px;background:var(--bg1);border:1px solid var(--line);overflow:hidden;box-shadow:var(--shadow)">
+            <button onClick="{{ s.onClick }}" style="width:100%;display:flex;align-items:center;gap:16px;padding:18px 20px;background:transparent;border:none;cursor:pointer;font-family:inherit;text-align:left;color:var(--txt)">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--optimal)">{{ s.n }}</span>
+              <span style="font-size:16px;font-weight:600;margin-right:auto">{{ s.title }}</span>
+              <span style="width:26px;height:26px;border-radius:8px;background:var(--bg2);display:grid;place-items:center;color:var(--txt2);font-size:18px;line-height:1">+</span>
+            </button>
+            <sc-if value="{{ s.open }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:0 20px 20px 56px">
+              <p style="margin:0 0 12px;font-size:14px;color:var(--txt2);line-height:1.55">{{ s.lead }}</p>
+              <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ s.items }}" as="it" hint-placeholder-count="4">
+                  <li style="display:flex;gap:10px;font-size:13.5px;color:var(--txt);line-height:1.5"><span style="color:var(--optimal);flex:none">·</span><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--txt2)">{{ it }}</span></li>
+                </sc-for>
+              </ul>
+            </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- E. FOOTER -->
+    <footer style="border-top:1px solid var(--line);margin-top:30px">
+      <div style="max-width:1120px;margin:0 auto;padding:44px 22px 110px">
+        <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:30px" data-foot>
+          <div>
+            <div style="display:flex;align-items:center;gap:11px;margin-bottom:14px"><div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(150deg,color-mix(in oklch,var(--optimal) 40%,var(--bg2)),var(--bg2));display:grid;place-items:center;border:1px solid var(--line)"><span style="width:10px;height:10px;border-radius:50%;background:var(--optimal);box-shadow:0 0 10px var(--optimal)"></span></div><span style="font-weight:600;font-size:15px">Ambient Monitor</span></div>
+            <p style="margin:0;font-size:13px;color:var(--txt3);line-height:1.55;max-width:36ch">A live window into a room&rsquo;s air, light and motion. Part of the teonix.dev portfolio.</p>
+          </div>
+          <div>
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--txt3);margin-bottom:12px">Repositories</div>
+            <div style="display:flex;flex-direction:column;gap:9px;font-size:13.5px">
+              <a href="https://github.com/Kennethch-02" target="_blank" rel="noopener" style="color:var(--txt2);text-decoration:none;font-family:'JetBrains Mono',monospace">ambient_monitor_scripts</a>
+              <a href="https://github.com/Kennethch-02" target="_blank" rel="noopener" style="color:var(--txt2);text-decoration:none;font-family:'JetBrains Mono',monospace">ambient-monitor-dashboard</a>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--txt3);margin-bottom:12px">Author</div>
+            <div style="font-size:13.5px;color:var(--txt);font-weight:600">Kenneth · kcastilloh</div>
+            <div style="font-size:12.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace;margin-top:4px">GitHub Kennethch-02</div>
+            <a href="https://teonix.dev" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;font-size:13px;color:var(--optimal);text-decoration:none">teonix.dev →</a>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:30px;padding-top:24px;border-top:1px solid var(--line-soft)">
+          <sc-for list="{{ techBadges }}" as="b" hint-placeholder-count="6"><span style="font-size:11.5px;font-family:'JetBrains Mono',monospace;color:var(--txt3);padding:5px 11px;border-radius:8px;background:var(--bg1);border:1px solid var(--line)">{{ b }}</span></sc-for>
+        </div>
+      </div>
+    </footer>
+  </div>
+  </sc-if>
+
+  <!-- view switcher -->
+  <nav style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:40;display:flex;gap:3px;padding:4px;border-radius:999px;background:color-mix(in oklch,var(--bg1) 86%,transparent);backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:0 14px 40px -16px oklch(0.05 0.02 215 / 0.7)">
+    <sc-for list="{{ navItems }}" as="nv" hint-placeholder-count="3">
+      <button onClick="{{ nv.onClick }}" style="{{ nv.style }}">{{ nv.label }}</button>
+    </sc-for>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { view:'dashboard', theme:'dark', dataState:'live', activeMetric:'temperature', roll:0.62, tick:0, embed:{widget:'temperature',theme:'auto',range:'1h',bg:'transparent'}, copied:false, openStep:1 };
+    // ---- mock data (stands in for useEnvironment()) ----
+    const N=60; const rnd=this._seeded(42);
+    this.hist=[];
+    for(let i=0;i<N;i++){
+      const temp=22.3+Math.sin(i/7)*0.55+(rnd()-0.5)*0.25;
+      const hum=46+Math.sin(i/9+1)*2.6+(rnd()-0.5)*1.2;
+      const light=412+Math.sin(i/5+0.5)*52+(rnd()-0.5)*22;
+      this.hist.push({temperature:temp,humidity:hum,light:light});
+    }
+    // motion ticks over the hour
+    this.motion=[]; for(let i=0;i<48;i++){ this.motion.push(rnd()<0.16); }
+    this.motion[47]=true; // recent
+  }
+  _seeded(s){ let x=s; return ()=>{ x=(x*1103515245+12345)&0x7fffffff; return x/0x7fffffff; }; }
+  componentWillUnmount(){}
+  // build svg path; returns {line,area,lastX,lastY,min,max}
+  _path(vals,w,h,padTop,padBot){
+    const min=Math.min(...vals), max=Math.max(...vals); const span=(max-min)||1;
+    const top=padTop, bot=h-padBot; const n=vals.length;
+    const pts=vals.map((v,i)=>{ const x=n>1?(i/(n-1))*w:0; const y=bot-((v-min)/span)*(bot-top); return [x,y]; });
+    const line='M'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' L');
+    const area=line+` L${w},${h} L0,${h} Z`;
+    return {line,area,lastX:pts[n-1][0].toFixed(1),lastY:pts[n-1][1].toFixed(1),min,max};
+  }
+  renderVals(){
+    const S=this.state, r=S.roll;
+    const last=this.hist[this.hist.length-1], prev=this.hist[this.hist.length-2];
+    const fmt=(n,d)=>Number(n).toFixed(d);
+    const trend=(a,b,d,u)=>{ const dv=a-b; const s=dv>=0?'+':'−'; return s+Math.abs(dv).toFixed(d)+(u||''); };
+    // sparks
+    const tS=this._path(this.hist.slice(-20).map(h=>h.temperature),120,34,4,4);
+    const hS=this._path(this.hist.slice(-20).map(h=>h.humidity),120,34,4,4);
+    const lS=this._path(this.hist.slice(-20).map(h=>h.light),120,34,4,4);
+    // main chart
+    const mKey=S.activeMetric;
+    const cfg={temperature:{hue:'var(--warm)',unit:'°C',d:1},humidity:{hue:'var(--cyan)',unit:'%',d:0},light:{hue:'var(--amber)',unit:' lux',d:0}}[mKey];
+    const cVals=this.hist.map(h=>h[mKey]);
+    const C=this._path(cVals,640,200,16,28);
+    // theme tokens for state pills/tabs
+    const pill=(on,col)=>`font-size:12px;font-weight:600;padding:6px 13px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;background:${on?'var(--bg1)':'transparent'};color:${on?col:'var(--txt3)'};box-shadow:${on?'0 1px 4px oklch(0.05 0.02 215/.3)':'none'}`;
+    const navPill=(on)=>`font-size:13px;font-weight:600;padding:8px 18px;border-radius:999px;border:none;cursor:pointer;font-family:inherit;transition:.2s;background:${on?'var(--optimal)':'transparent'};color:${on?'var(--bg0)':'var(--txt2)'}`;
+    const setMetric=(k)=>()=>this.setState({activeMetric:k});
+    const setDS=(k)=>()=>this.setState({dataState:k});
+    const dsBtn=(k,label)=>({label,onClick:setDS(k),style:`font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:8px;cursor:pointer;font-family:inherit;border:1px solid ${S.dataState===k?'color-mix(in oklch,var(--optimal) 40%,var(--line))':'var(--line)'};background:${S.dataState===k?'color-mix(in oklch,var(--optimal) 14%,var(--bg1))':'var(--bg1)'};color:${S.dataState===k?'var(--optimal)':'var(--txt3)'}`});
+    // ---- embed builder ----
+    const E=S.embed;
+    const ewMeta={
+      temperature:{label:'Temperature',val:fmt(last.temperature,1),unit:'°C',hue:'var(--warm)',spark:tS,icon:'temp'},
+      humidity:{label:'Humidity',val:String(Math.round(last.humidity)),unit:'%',hue:'var(--cyan)',spark:hS,icon:'hum'},
+      light:{label:'Ambient Light',val:String(Math.round(last.light)),unit:'lux',hue:'var(--amber)',spark:lS,icon:'light'},
+    };
+    const em=ewMeta[E.widget]||ewMeta.temperature;
+    const optBtn=(active,label,onClick)=>({label,onClick,style:`font-size:12px;font-weight:600;padding:8px 13px;border-radius:9px;cursor:pointer;font-family:inherit;border:1px solid ${active?'color-mix(in oklch,var(--optimal) 42%,var(--line))':'var(--line)'};background:${active?'color-mix(in oklch,var(--optimal) 15%,var(--bg1))':'var(--bg1)'};color:${active?'var(--optimal)':'var(--txt2)'}`});
+    const setE=(k,v)=>()=>this.setState(s=>({embed:{...s.embed,[k]:v},copied:false}));
+    const snippet=`<iframe\n  src="https://ambient.teonix.dev/embed?widget=${E.widget}&theme=${E.theme}&range=${E.range}&bg=${E.bg}"\n  width="340" height="190" frameborder="0"\n  style="border:0;border-radius:16px"\n  title="Ambient Monitor"></iframe>`;
+    const previewTheme=E.theme==='light'?'light':E.theme==='dark'?'':(S.theme==='light'?'light':'');
+    return {
+      themeClass:S.theme==='light'?'light':'',
+      isDark:S.theme==='dark', isLight:S.theme==='light',
+      toggleTheme:()=>this.setState(s=>({theme:s.theme==='dark'?'light':'dark'})),
+      isDashboard:S.view==='dashboard', isEmbed:S.view==='embed', isLanding:S.view==='landing',
+      goLanding:()=>this.setState({view:'landing'}), goDashboard:()=>this.setState({view:'dashboard'}), goEmbed:()=>this.setState({view:'embed'}),
+      goLive:()=>this.setState({dataState:'live'}),
+      navItems:[{label:'Landing',onClick:()=>this.setState({view:'landing'}),style:navPill(S.view==='landing')},{label:'Dashboard',onClick:()=>this.setState({view:'dashboard'}),style:navPill(S.view==='dashboard')},{label:'Embed',onClick:()=>this.setState({view:'embed'}),style:navPill(S.view==='embed')}],
+      // state machine
+      stateLive:S.dataState==='live', stateLoading:S.dataState==='loading', stateOffline:S.dataState==='offline', stateError:S.dataState==='error',
+      stateOptions:[dsBtn('live','Live'),dsBtn('loading','Loading'),dsBtn('offline','Offline'),dsBtn('error','Error')],
+      skeletons:[1,2,3,4],
+      updatedAgo:'12s ago',
+      // hero
+      roomHeadline:'Your room feels great right now', roomSub:'Temperature, humidity and light are all in the ideal range for focused work. Air is calm and the space is comfortably lit.',
+      feelsLike:fmt(last.temperature,1), comfortScore:94,
+      // metrics
+      tempVal:fmt(last.temperature,1), humVal:Math.round(last.humidity), lightVal:Math.round(last.light),
+      tempQuality:'Optimal', humQuality:'Optimal', lightQuality:'Optimal',
+      tempTrend:trend(last.temperature,prev.temperature,1,'°'), humTrend:trend(last.humidity,prev.humidity,0,'%'), lightTrend:trend(last.light,prev.light,0,''),
+      tempSparkLine:tS.line, tempSparkArea:tS.area, humSparkLine:hS.line, humSparkArea:hS.area, lightSparkLine:lS.line, lightSparkArea:lS.area,
+      motionLabel:'Active', lastMotion:'just now', motionEvents:7,
+      // chart
+      metricTabs:[{label:'Temp',onClick:setMetric('temperature'),style:pill(mKey==='temperature','var(--warm)')},{label:'Humidity',onClick:setMetric('humidity'),style:pill(mKey==='humidity','var(--cyan)')},{label:'Light',onClick:setMetric('light'),style:pill(mKey==='light','var(--amber)')}],
+      chartHue:cfg.hue, chartLine:C.line, chartArea:C.area, lastPointX:C.lastX, lastPointY:C.lastY,
+      chartMin:fmt(C.min,cfg.d)+cfg.unit, chartMax:fmt(C.max,cfg.d)+cfg.unit, chartNow:fmt(cVals[cVals.length-1],cfg.d)+cfg.unit,
+      chartTimes:['-60m','-45m','-30m','-15m','now'],
+      // summary
+      avgTemp:fmt(this.hist.reduce((a,h)=>a+h.temperature,0)/this.hist.length,1), avgHum:Math.round(this.hist.reduce((a,h)=>a+h.humidity,0)/this.hist.length), avgLight:Math.round(this.hist.reduce((a,h)=>a+h.light,0)/this.hist.length),
+      // motion timeline
+      motionTicks:this.motion.map((on,i)=>({style:`flex:1;border-radius:3px;height:${on?(40+(i%3)*4):8}px;background:${on?'var(--violet)':'var(--line)'};opacity:${on?(0.6+0.4*(i/48)):1}`})),
+      // ---- embed ----
+      emWidget:E.widget, emTheme:E.theme, emRange:E.range, emBg:E.bg,
+      emIsSingle:['temperature','humidity','light'].includes(E.widget), emIsMotion:E.widget==='motion', emIsSummary:E.widget==='summary', emIsAll:E.widget==='all',
+      emLabel:em.label, emVal:em.val, emUnit:em.unit, emHue:em.hue, emQ:'Optimal',
+      emSparkLine:em.spark.line, emSparkArea:em.spark.area,
+      emShowSpark:E.range!=='live', emRangeLabel:({live:'realtime','1h':'last hour','24h':'last 24 hours'})[E.range],
+      emPreviewClass:previewTheme,
+      emBgStyle:E.bg==='transparent'?'background:transparent;border:1px solid color-mix(in oklch,var(--txt) 12%,transparent)':'background:var(--bg1);border:1px solid var(--line)',
+      emHostStyle:E.bg==='transparent'?'background:repeating-conic-gradient(oklch(0.5 0.02 230/.16) 0% 25%, transparent 0% 50%) 50%/22px 22px':'background:linear-gradient(135deg,oklch(0.42 0.05 255),oklch(0.32 0.06 285))',
+      widgetBtns:[['temperature','Temp'],['humidity','Humidity'],['light','Light'],['motion','Motion'],['summary','Summary'],['all','All']].map(([k,l])=>optBtn(E.widget===k,l,setE('widget',k))),
+      themeBtns:[['auto','Auto'],['light','Light'],['dark','Dark']].map(([k,l])=>optBtn(E.theme===k,l,setE('theme',k))),
+      rangeBtns:[['live','Live'],['1h','1h'],['24h','24h']].map(([k,l])=>optBtn(E.range===k,l,setE('range',k))),
+      bgBtns:[['transparent','Transparent'],['solid','Solid']].map(([k,l])=>optBtn(E.bg===k,l,setE('bg',k))),
+      embedSnippet:snippet,
+      copyEmbed:()=>{ try{navigator.clipboard.writeText(snippet);}catch(e){} this.setState({copied:true}); },
+      copyLabel:S.copied?'Copied ✓':'Copy snippet',
+      emAllCards:[{label:'Temp',val:fmt(last.temperature,1),unit:'°C',hue:'var(--warm)'},{label:'Humidity',val:String(Math.round(last.humidity)),unit:'%',hue:'var(--cyan)'},{label:'Light',val:String(Math.round(last.light)),unit:'lx',hue:'var(--amber)'},{label:'Motion',val:'Active',unit:'',hue:'var(--violet)'}],
+      emAvgTemp:fmt(this.hist.reduce((a,h)=>a+h.temperature,0)/this.hist.length,1), emAvgHum:Math.round(this.hist.reduce((a,h)=>a+h.humidity,0)/this.hist.length), emAvgLight:Math.round(this.hist.reduce((a,h)=>a+h.light,0)/this.hist.length),
+      // ---- landing ----
+      heroTemp:fmt(last.temperature,1), heroSparkLine:tS.line, heroSparkArea:tS.area,
+      techBadges:['React 18','Vite 6','Tailwind 3.4','Recharts','Firebase RTDB','ESP32 · PlatformIO'],
+      landingFeatures:[
+        {hue:'var(--warm)',title:'Real-time sensing',body:'Temperature, humidity, ambient light and motion — sampled every 60 seconds and streamed live from the room.',icon:'<path d="M14 14.76V4a2 2 0 0 0-4 0v10.76a4 4 0 1 0 4 0z"/>'},
+        {hue:'var(--optimal)',title:'Environment quality',body:'Automatic Optimal / Too Hot / Too Dry / Too Dark analysis, tuned for a comfortable place to focus and work.',icon:'<path d="M20 6 9 17l-5-5"/>'},
+        {hue:'var(--cyan)',title:'History & trends',body:'A rolling one-hour chart, summary averages and a motion timeline — the room\u2019s recent story at a glance.',icon:'<path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/>'},
+        {hue:'var(--violet)',title:'Embeddable widgets',body:'Drop a live widget into any website with one line of HTML. Configurable by URL, transparent or solid.',icon:'<path d="M9 9 4 12l5 3"/><path d="m15 9 5 3-5 3"/>'},
+        {hue:'var(--amber)',title:'Dark & light',body:'A calm, ambient theme in both modes that encodes the room\u2019s state in colour — readable at a glance.',icon:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2"/>'},
+        {hue:'var(--muted)',title:'Open hardware',body:'An ESP32 node with DHT22, BH1750 and a PIR sensor — fully documented and reproducible from scratch.',icon:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/>'},
+      ],
+      wiringRows:[
+        {part:'DHT22',sub:'temperature + humidity',pin:'GPIO 4',note:'data line · 3.3V',hue:'var(--warm)'},
+        {part:'BH1750',sub:'ambient light',pin:'SDA 21 · SCL 22',note:'I\u00b2C · 3.3V',hue:'var(--amber)'},
+        {part:'PIR sensor',sub:'motion',pin:'GPIO 13',note:'active-low (!digitalRead)',hue:'var(--violet)'},
+        {part:'RGB LED',sub:'status indicator',pin:'R 25 · G 26 · B 27',note:'onboard signal',hue:'var(--optimal)'},
+        {part:'Power',sub:'rails',pin:'3.3V / GND',note:'PIR Vcc may need 5V',hue:'var(--cyan)'},
+      ],
+      ledLegend:[
+        {dot:'background:var(--optimal);box-shadow:0 0 12px var(--optimal)',label:'System OK',sub:'solid green'},
+        {dot:'background:var(--cold);box-shadow:0 0 12px var(--cold)',label:'Connecting to WiFi',sub:'blue blink'},
+        {dot:'background:oklch(0.62 0.2 25);box-shadow:0 0 12px oklch(0.62 0.2 25)',label:'Sensor error',sub:'red blink'},
+        {dot:'background:linear-gradient(90deg,oklch(0.62 0.2 25) 50%,var(--cold) 50%)',label:'Firebase error',sub:'red / blue alternating'},
+        {dot:'background:linear-gradient(90deg,var(--optimal) 50%,var(--cold) 50%)',label:'Motion detected',sub:'green + blue'},
+        {dot:'background:var(--cold);box-shadow:0 0 12px var(--cold)',label:'PIR calibrating',sub:'blue blink · 30s'},
+        {dot:'background:oklch(0.96 0.01 230);box-shadow:0 0 12px oklch(0.9 0.02 230)',label:'Initializing',sub:'white blink'},
+      ],
+      steps:[
+        {n:'01',title:'Gather the bill of materials',open:S.openStep===1,onClick:()=>this.setState(s=>({openStep:s.openStep===1?0:1})),lead:'Most parts are common and substitutable — the PIR and LED models in particular.',items:['ESP32 dev board — upesy_wroom / generic WROOM-32','DHT22 temperature + humidity sensor','BH1750 (GY-302) ambient light sensor','PIR motion sensor (e.g. HC-SR501)','Common RGB LED + 3×220Ω resistors','Breadboard, jumper wires and a USB cable']},
+        {n:'02',title:'Wire it up',open:S.openStep===2,onClick:()=>this.setState(s=>({openStep:s.openStep===2?0:2})),lead:'Follow the connection map above. Everything shares the 3.3V and GND rails.',items:['DHT22 data → GPIO 4','BH1750 → I²C: SDA 21, SCL 22','PIR output → GPIO 13 (3.3V logic)','RGB LED → GPIO 25 / 26 / 27 through resistors']},
+        {n:'03',title:'Flash the firmware (PlatformIO)',open:S.openStep===3,onClick:()=>this.setState(s=>({openStep:s.openStep===3?0:3})),lead:'The firmware repo ships with its dependencies declared in lib_deps.',items:['Clone ambient_monitor_scripts','Copy include/secrets.example.h → include/secrets.h','Fill in your WiFi and Firebase credentials','Build & upload to the ESP32']},
+        {n:'04',title:'Set up Firebase',open:S.openStep===4,onClick:()=>this.setState(s=>({openStep:s.openStep===4?0:4})),lead:'The device writes; the dashboard reads anonymously.',items:['Create a project and enable Realtime Database','Enable Email/Password auth (device account)','Enable Anonymous auth (dashboard, read-only)','Set DB rules — data lands at /ambient_data/{ts} and /motion_events/{ts}']},
+        {n:'05',title:'Run the dashboard',open:S.openStep===5,onClick:()=>this.setState(s=>({openStep:s.openStep===5?0:5})),lead:'A standard Vite + React app.',items:['Clone ambient-monitor-dashboard','Set your web config in src/config/firebase.js','npm install','npm run dev — or npm run build']},
+        {n:'06',title:'Embed it anywhere (optional)',open:S.openStep===6,onClick:()=>this.setState(s=>({openStep:s.openStep===6?0:6})),lead:'One line drops a live widget into any page.',items:['<iframe src=".../embed?widget=temperature&theme=auto">']},
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
