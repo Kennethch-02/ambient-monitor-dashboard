@@ -19,9 +19,17 @@ _Updated: 2026-06-29_
 
 - **Firmware flashed & running on the ESP32** (build green, FirebaseClient 2.x). Hardware live.
 
-## In progress
-- **UI redesign** — brief handed to Claude Design (`docs/CLAUDE_DESIGN_BRIEF.md`). **User will deliver
-  the new designed frontend for us to implement** (landing + dashboard + embed). Awaiting that handoff.
+## In progress — IMPLEMENTING the Claude Design redesign (from `Redesign/Ambient Monitor.dc.html`)
+- Auth changed to **email/password** (read-only dashboard account): `firebase.js` signs in with
+  `VITE_FIREBASE_AUTH_EMAIL`/`_PASSWORD` (added to `.env`/`.env.example`). User said "ya están las reglas".
+- Foundation built: `react-router-dom` added; `vite.config.js` multi-entry (index.html + embed.html);
+  `src/index.css` = mockup OKLCH tokens (--bg0…--violet) + keyframes; `tailwind.config.js` tokens;
+  `index.html`/`embed.html` with Space Grotesk + JetBrains Mono; `src/lib/{spark,quality,format,theme}.js`;
+  `main.jsx` (BrowserRouter), `App.jsx` (Routes / , /dashboard, /embed), `src/embed.jsx` (lean widget entry).
+- Routes: `/` Landing (= domain root ambient.teonix.dev), `/dashboard`, `/embed` (builder). Lean widget = `embed.html`.
+- 3 subagents porting views from the mockup → Dashboard (+components+states), Landing (+HardwareDiagram), Embed (EmbedWidget+EmbedBuilder).
+- PENDING after agents: build, fix integration, run, screenshot. Deploy needs SPA fallback (don't rewrite embed.html) + framing headers.
+- Copy fix applied in landing step 04: email/password instead of anonymous auth.
 
 ## Dashboard repo re-initialized (fresh git)
 - `git init -b main` done; initial commit `66f35f0`. `.env` verified ignored & NOT committed.

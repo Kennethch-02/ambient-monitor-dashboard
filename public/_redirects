@@ -1,0 +1,4 @@
+# Cloudflare Pages / Netlify SPA fallback.
+# Real static files (embed.html, /assets/*) are served before this catch-all,
+# so the lean widget at /embed.html keeps working; everything else → the SPA.
+/*    /index.html   200

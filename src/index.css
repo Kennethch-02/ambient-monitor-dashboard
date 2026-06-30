@@ -2,26 +2,75 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white;
-  }
+/* ===== Ambient Monitor design tokens (OKLCH; dark = default, .light overrides) ===== */
+:root{
+  --bg0: oklch(0.155 0.012 215);
+  --bg1: oklch(0.205 0.015 215);
+  --bg1b: oklch(0.235 0.017 215);
+  --bg2: oklch(0.265 0.018 215);
+  --line: oklch(0.33 0.02 215);
+  --line-soft: oklch(0.275 0.016 215);
+  --txt: oklch(0.965 0.006 215);
+  --txt2: oklch(0.74 0.013 215);
+  --txt3: oklch(0.56 0.015 215);
+  --optimal: oklch(0.82 0.13 168);
+  --warm: oklch(0.76 0.15 48);
+  --cold: oklch(0.78 0.12 245);
+  --amber: oklch(0.85 0.13 88);
+  --cyan: oklch(0.82 0.10 215);
+  --violet: oklch(0.78 0.13 292);
+  --muted: oklch(0.64 0.04 250);
+  --shadow: 0 1px 0 oklch(0.5 0.02 215 / 0.04) inset, 0 18px 40px -24px oklch(0.05 0.02 215 / 0.8);
+}
+.light{
+  --bg0: oklch(0.972 0.006 210);
+  --bg1: oklch(0.995 0.003 210);
+  --bg1b: oklch(0.985 0.005 210);
+  --bg2: oklch(0.955 0.008 210);
+  --line: oklch(0.9 0.012 215);
+  --line-soft: oklch(0.93 0.009 215);
+  --txt: oklch(0.26 0.022 220);
+  --txt2: oklch(0.46 0.02 220);
+  --txt3: oklch(0.62 0.018 220);
+  --optimal: oklch(0.62 0.13 168);
+  --warm: oklch(0.62 0.16 48);
+  --cold: oklch(0.6 0.14 250);
+  --amber: oklch(0.68 0.14 80);
+  --cyan: oklch(0.6 0.12 230);
+  --violet: oklch(0.58 0.15 292);
+  --muted: oklch(0.55 0.04 250);
+  --shadow: 0 1px 0 oklch(1 0 0 / 0.6) inset, 0 18px 40px -28px oklch(0.5 0.04 215 / 0.35);
 }
 
-@layer components {
-  .card {
-    @apply bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6;
-  }
-  
-  .card-title {
-    @apply text-xl font-bold text-gray-900 dark:text-white mb-4;
-  }
-  
-  .btn {
-    @apply px-4 py-2 rounded-lg font-medium transition-colors;
-  }
-  
-  .btn-primary {
-    @apply bg-primary hover:bg-primary-dark text-white;
-  }
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg0);
+  color:var(--txt);
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  font-feature-settings:'ss01';
+  -webkit-font-smoothing:antialiased;
+}
+
+@keyframes amb-pulse{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1.1)}}
+@keyframes amb-ring{0%{opacity:.6;transform:scale(.6)}70%{opacity:0}100%{opacity:0;transform:scale(2.4)}}
+@keyframes amb-draw{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+@keyframes amb-fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes amb-breathe{0%,100%{opacity:.5}50%{opacity:.9}}
+@keyframes amb-spin{to{transform:rotate(360deg)}}
+@keyframes amb-blink{0%,45%{opacity:1}55%,100%{opacity:.12}}
+.amb-draw{stroke-dasharray:1000;animation:amb-draw 1.6s cubic-bezier(.45,0,.15,1) forwards}
+.amb-enter{animation:amb-fade .6s cubic-bezier(.2,.7,.2,1) both}
+
+*::-webkit-scrollbar{width:10px;height:10px}
+*::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:3px solid transparent;background-clip:content-box}
+
+/* responsive collapses — match the mockup's data-* grids */
+@media (max-width:860px){
+  [data-hero],[data-hw],[data-cols],[data-foot]{grid-template-columns:1fr !important}
+  [data-embed-cols]{grid-template-columns:1fr !important}
+  [data-hero]{gap:30px !important}
+}
+@media (max-width:560px){
+  [data-foot]{grid-template-columns:1fr 1fr !important}
 }

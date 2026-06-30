@@ -1,0 +1,3 @@
+# Cloudflare Pages / Netlify — allow the embed widget to be framed by any site.
+/embed.html
+  Content-Security-Policy: frame-ancestors *
