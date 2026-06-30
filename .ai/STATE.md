@@ -19,17 +19,23 @@ _Updated: 2026-06-29_
 
 - **Firmware flashed & running on the ESP32** (build green, FirebaseClient 2.x). Hardware live.
 
-## In progress — IMPLEMENTING the Claude Design redesign (from `Redesign/Ambient Monitor.dc.html`)
-- Auth changed to **email/password** (read-only dashboard account): `firebase.js` signs in with
-  `VITE_FIREBASE_AUTH_EMAIL`/`_PASSWORD` (added to `.env`/`.env.example`). User said "ya están las reglas".
-- Foundation built: `react-router-dom` added; `vite.config.js` multi-entry (index.html + embed.html);
-  `src/index.css` = mockup OKLCH tokens (--bg0…--violet) + keyframes; `tailwind.config.js` tokens;
-  `index.html`/`embed.html` with Space Grotesk + JetBrains Mono; `src/lib/{spark,quality,format,theme}.js`;
-  `main.jsx` (BrowserRouter), `App.jsx` (Routes / , /dashboard, /embed), `src/embed.jsx` (lean widget entry).
-- Routes: `/` Landing (= domain root ambient.teonix.dev), `/dashboard`, `/embed` (builder). Lean widget = `embed.html`.
-- 3 subagents porting views from the mockup → Dashboard (+components+states), Landing (+HardwareDiagram), Embed (EmbedWidget+EmbedBuilder).
-- PENDING after agents: build, fix integration, run, screenshot. Deploy needs SPA fallback (don't rewrite embed.html) + framing headers.
-- Copy fix applied in landing step 04: email/password instead of anonymous auth.
+## Redesign IMPLEMENTED & building (commit 9f797c8)
+- Auth: email/password read account (`firebase.js` signInWithEmailAndPassword via `VITE_FIREBASE_AUTH_*`).
+  User committed it ("Auth Email"). **Password still blank in .env** → live data won't load until filled;
+  dashboard correctly shows loading→offline states meanwhile.
+- 3 views via react-router-dom: `/` Landing (domain root), `/dashboard`, `/embed` (builder).
+  Lean iframe widget = separate Vite entry `embed.html` → `src/embed.jsx`. Snippet points to `/embed.html`.
+- Design system: `src/index.css` (OKLCH tokens, dark default + `.light`), Space Grotesk + JetBrains Mono;
+  helpers `src/lib/{spark,quality,format,theme}.js`. Components: Layout, MetricCard, HeroStatus, HistoryChart,
+  SummaryPanel, MotionTimeline, MotionWidget, ThemeToggle, EmbedTeaser, HardwareDiagram, EmbedWidget; pages
+  Landing/Dashboard/EmbedBuilder. Old orphans (EnvironmentAnalysis, DateRangeSelector) deleted.
+- Deploy: `vercel.json` (SPA rewrite + `/embed.html` frame-ancestors *) and `public/_redirects`/`_headers`
+  (Cloudflare Pages/Netlify). **Host not confirmed** — both provided.
+- VERIFIED: `npm run build` GREEN (both entries); lint shows only style issues (prop-types / unused React
+  import) — no undefined refs; dev server serves /, /dashboard, /embed, /embed.html (all 200). No browser
+  tool available → no screenshots; visual review is the user's.
+- Build chunk: main 92KB + shared 499KB (firebase+recharts) — consider code-splitting later. recharts is
+  installed but the chart was done as inline SVG (matches mockup); recharts now unused (could remove).
 
 ## Dashboard repo re-initialized (fresh git)
 - `git init -b main` done; initial commit `66f35f0`. `.env` verified ignored & NOT committed.

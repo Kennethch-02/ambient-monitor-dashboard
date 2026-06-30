@@ -45,6 +45,16 @@
 - NEXT SESSION: user will provide the new frontend designed via Claude Design (from
   `docs/CLAUDE_DESIGN_BRIEF.md`) for us to implement (landing + dashboard + embed; keep `EnvironmentContext`/data layer).
 
+## 2026-06-29 — Implemented the full Claude Design redesign
+- Added email/password auth to `firebase.js` (VITE_FIREBASE_AUTH_*); built shared foundation (router,
+  multi-entry vite, OKLCH design system, fonts, lib helpers) myself, then dispatched 3 parallel subagents
+  to port the 3 views from `Redesign/Ambient Monitor.dc.html` (the design mockup = source of truth).
+- Agents delivered Dashboard (+10 components+states), Landing (+HardwareDiagram), Embed (EmbedWidget+EmbedBuilder).
+- Integrated: `npm run build` GREEN (×2), lint clean of real errors, dev server serves all routes/entries.
+  Deleted orphans, added deploy config (vercel.json + _redirects/_headers). Committed `9f797c8` (not pushed).
+- EnvironmentContext/data layer untouched. No browser tool → couldn't screenshot; user reviews visually.
+- USER TODO: fill VITE_FIREBASE_AUTH_PASSWORD for live data; confirm deploy host; decide if Redesign/ + .ai go public.
+
 ## 2026-06-29 — Re-init dashboard repo + run
 - User had deleted the dashboard git + node_modules to restart. Moved Firebase config to `.env`
   (VITE_*), removed anon auth from `firebase.js` (exports only `db`), added `.env.example`, deleted
