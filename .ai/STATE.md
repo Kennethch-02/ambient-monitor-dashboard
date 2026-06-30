@@ -23,9 +23,12 @@ _Updated: 2026-06-29_
 - **UI redesign** — brief handed to Claude Design (`docs/CLAUDE_DESIGN_BRIEF.md`). **User will deliver
   the new designed frontend for us to implement** (landing + dashboard + embed). Awaiting that handoff.
 
-## ⚠️ Dashboard repo git was DELETED (user restarted from scratch) — needs `git init` again.
-- When re-initializing: `.gitignore` already ignores `.env` (real config) + keeps `.env.example`. Verify
-  `.env` is NOT staged before the first commit.
+## Dashboard repo re-initialized (fresh git)
+- `git init -b main` done; initial commit `66f35f0`. `.env` verified ignored & NOT committed.
+- `npm install` (437 pkgs; 19 npm-audit vulns, not auto-fixed). `npm run build` GREEN. `npm run dev` on :5173.
+- **Design delivered:** `Redesign/` folder has the Claude Design output (HTML + screenshots: landing w/
+  hardware + steps, dashboard, embed). NEXT: implement it into React (keep `EnvironmentContext`/data layer).
+- Pre-public TODO: decide if `Redesign/` and `.ai/` (internal notes) belong in the public repo.
 
 ## Security — before making the dashboard repo public (in progress)
 - DONE: `database.rules.json` hardened (public read, write only `auth.uid === '<DEVICE_UID>'`, field validation).

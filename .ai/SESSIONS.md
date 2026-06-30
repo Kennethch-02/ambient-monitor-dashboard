@@ -44,3 +44,11 @@
 - **User flashed the firmware to the ESP32** — hardware now live.
 - NEXT SESSION: user will provide the new frontend designed via Claude Design (from
   `docs/CLAUDE_DESIGN_BRIEF.md`) for us to implement (landing + dashboard + embed; keep `EnvironmentContext`/data layer).
+
+## 2026-06-29 — Re-init dashboard repo + run
+- User had deleted the dashboard git + node_modules to restart. Moved Firebase config to `.env`
+  (VITE_*), removed anon auth from `firebase.js` (exports only `db`), added `.env.example`, deleted
+  `firebase.template.js`, hardened `.gitignore` (ignores `.env`, keeps `.env.example`).
+- `npm install` (437 pkgs) → `npm run build` GREEN (env wiring works) → `npm run dev` on :5173.
+- `git init -b main` + initial commit `66f35f0`; verified `.env` ignored & not staged.
+- Noticed `Redesign/` = the Claude Design front (HTML + screenshots) is now in the project, ready to implement.
